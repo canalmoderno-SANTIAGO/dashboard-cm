@@ -342,6 +342,15 @@
 
   @media(max-width:900px){.avance-grid,.stats-row{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start;gap:10px}.header-right{text-align:left}}
 
+  /* ============ SECCIONES COLAPSABLES ============ */
+  .section-title{cursor:pointer;user-select:none}
+  .section-title:hover{filter:brightness(0.95)}
+  .sect-toggle{display:inline-block;margin-left:8px;font-size:0.78em;color:#14397a;transition:transform .18s ease}
+  .section.collapsed .sect-toggle{transform:rotate(-90deg)}
+  .section.collapsed{padding-bottom:18px}
+  .section.collapsed > *:not(.section-title){display:none !important}
+  .section.collapsed > .section-title{margin-bottom:0}
+
   /* ============ MOBILE (smartphone) ============ */
   @media(max-width:640px){
     body{padding:8px 6px;font-size:12px}
@@ -396,7 +405,7 @@
         <div class="header-subtitle">Dashboard Ejecutivo · MAY 2026 · Semana en curso S19</div>
       </div>
     </div>
-    <div class="header-right">Actualizado<strong>06/05/2026 · 23:34</strong></div>
+    <div class="header-right">Actualizado<strong>06/05/2026 · 23:39</strong></div>
   </div>
 
   <!-- CONTROLS -->
@@ -1347,6 +1356,31 @@ renderTblSsem();
 renderSuperSection();
 populateSemanaSelector();
 renderHist();
+
+// === Secciones colapsables (click en el título minimiza/expande) ===
+(function setupCollapsibleSections(){
+  const sections = document.querySelectorAll('.section');
+  sections.forEach((sec, idx) => {
+    const title = sec.querySelector('.section-title');
+    if (!title) return;
+    // Clave estable para localStorage: id de la sección o índice
+    const key = 'cm_sect_' + (sec.id || idx);
+    // Añadir chevron
+    const chev = document.createElement('span');
+    chev.className = 'sect-toggle';
+    chev.textContent = '▼';
+    title.appendChild(chev);
+    // Restaurar estado
+    if (localStorage.getItem(key) === '1') sec.classList.add('collapsed');
+    // Toggle al click
+    title.addEventListener('click', (e) => {
+      // Evitar que el click sobre un span interactivo del título dispare otra cosa
+      e.stopPropagation();
+      sec.classList.toggle('collapsed');
+      localStorage.setItem(key, sec.classList.contains('collapsed') ? '1' : '0');
+    });
+  });
+})();
 </script>
 </body>
 </html>
