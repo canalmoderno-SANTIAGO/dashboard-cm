@@ -341,6 +341,47 @@
   .footer{text-align:center;color:#94a3b8;font-size:11px;padding:14px 0}
 
   @media(max-width:900px){.avance-grid,.stats-row{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start;gap:10px}.header-right{text-align:left}}
+
+  /* ============ MOBILE (smartphone) ============ */
+  @media(max-width:640px){
+    body{padding:8px 6px;font-size:12px}
+    .wrap{max-width:100%}
+    .header{padding:0 4px 10px;border-bottom-width:3px}
+    .header-logo{height:42px}
+    .header-title{font-size:18px;line-height:1.1}
+    .header-subtitle{font-size:10px;letter-spacing:0.5px;margin-top:3px}
+    .header-right{font-size:10px}
+    .header-right strong{font-size:11px}
+    .controls{padding:10px 12px;gap:10px;border-radius:8px;margin-bottom:12px}
+    .control-group{gap:6px}
+    .control-label{font-size:10px;letter-spacing:0.5px}
+    .btn{padding:6px 10px;font-size:11px}
+    select.input{padding:5px 8px;font-size:11px}
+    .section{padding:12px;margin-bottom:12px;border-radius:8px}
+    .section-title{font-size:11px;letter-spacing:0.8px;padding:5px 9px;margin-bottom:10px}
+    .stat-box{padding:12px 14px;gap:10px;border-radius:10px}
+    .stat-icon-box{width:38px;height:38px;font-size:18px;border-radius:9px}
+    .stat-label{font-size:9.5px;letter-spacing:0.8px}
+    .stat-value{font-size:20px}
+    .avance-card{padding:14px 16px}
+    .avance-num{font-size:30px}
+    .avance-sub{font-size:10.5px}
+    .avance-double-bar{height:22px}
+    .avance-legend{font-size:9.5px;gap:10px;flex-wrap:wrap}
+    .chart-wrap{height:280px}
+    .footer{font-size:10px;padding:10px 0}
+    /* Las tablas (ssem-tbl, super-comp-tbl, hist-tbl) ya tienen .tbl-wrap con
+       overflow-x:auto — en móvil se ven con scroll horizontal */
+    .tbl-wrap{margin:0 -4px;border-radius:0}
+    /* Indicador visual de que las tablas se desplazan */
+    .tbl-wrap::after{content:'← desliza →';display:block;text-align:center;font-size:10px;color:#94a3b8;padding:6px 0;font-style:italic}
+  }
+  @media(max-width:380px){
+    .header-title{font-size:16px}
+    .avance-num{font-size:26px}
+    .stat-value{font-size:18px}
+    .section-title{font-size:10px}
+  }
 </style>
 </head>
 <body>
@@ -355,7 +396,7 @@
         <div class="header-subtitle">Dashboard Ejecutivo · MAY 2026 · Semana en curso S19</div>
       </div>
     </div>
-    <div class="header-right">Actualizado<strong>06/05/2026 · 23:31</strong></div>
+    <div class="header-right">Actualizado<strong>06/05/2026 · 23:34</strong></div>
   </div>
 
   <!-- CONTROLS -->
