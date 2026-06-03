@@ -416,7 +416,16 @@
   .mes-tbl tbody tr.row-actual td{background:linear-gradient(90deg,#fef9c3,#fef08a) !important;border-top:2px solid #ca8a04;border-bottom:2px solid #ca8a04;font-weight:800}
   .mes-tbl tbody tr.row-actual td:first-child{background:linear-gradient(90deg,#fbbf24,#f59e0b) !important;color:#451a03;border-right:3px solid #b45309;letter-spacing:0.8px}
   .mes-inline-badge{display:inline-block;background:#ca8a04;color:white;font-size:9.5px;font-weight:900;letter-spacing:1px;padding:2px 7px;border-radius:4px;vertical-align:middle;margin-left:6px;text-transform:uppercase}
-  .mes-lbl-badge{display:inline-block;background:rgba(255,255,255,0.85);color:#451a03;font-size:9.5px;font-weight:800;letter-spacing:0.8px;padding:2px 6px;border-radius:4px;margin-left:6px;text-transform:uppercase}
+  .mes-lbl-badge{display:inline-block;background:rgba(255,255,255,0.85);color:#451a03;font-size:11px;font-weight:900;letter-spacing:0.8px;padding:2px 7px;border-radius:4px;margin-left:6px}
+  /* Celda 2026 cuando esta en curso */
+  .curso-cell{display:flex;flex-direction:column;align-items:flex-end;gap:4px;line-height:1}
+  .curso-q{font-size:14px;font-weight:900;color:#451a03;letter-spacing:-0.3px;font-variant-numeric:tabular-nums}
+  .curso-badge{display:inline-block;background:#ca8a04;color:white;font-size:9.5px;font-weight:900;letter-spacing:1.2px;padding:3px 8px;border-radius:4px;text-transform:uppercase;box-shadow:0 1px 3px rgba(202,138,4,0.3)}
+  /* Celdas % cuando estan en curso - mostrar % con tag parcial */
+  .mes-tbl td.curso-pct{background:linear-gradient(180deg,#fef3c7 0%,#fde68a 100%) !important;font-weight:900;text-align:right;padding:8px 14px !important;vertical-align:middle}
+  .mes-tbl tbody tr.row-actual td.curso-pct{background:transparent !important}
+  .curso-pct-val{display:block;font-size:15px;font-weight:900;color:#7c2d12;letter-spacing:-0.3px;line-height:1.1}
+  .curso-tag{display:inline-block;background:rgba(202,138,4,0.85);color:white;font-size:9px;font-weight:800;letter-spacing:1px;padding:1px 6px;border-radius:3px;text-transform:uppercase;margin-top:3px}
   .mes-tbl tbody tr.row-future td{color:#cbd5e1;font-style:italic;background:#fafbfc;font-weight:500}
   .mes-tbl tbody tr.row-future td:first-child{color:#94a3b8;background:#f1f5f9}
   .mes-tbl tbody tr:last-child td{border-bottom:none}
@@ -565,7 +574,7 @@
         <div class="header-subtitle">Dashboard Ejecutivo · JUN 2026 · Semana en curso S23</div>
       </div>
     </div>
-    <div class="header-right">Actualizado<strong>03/06/2026 · 12:48</strong></div>
+    <div class="header-right">Actualizado<strong>03/06/2026 · 12:53</strong></div>
   </div>
 
   <!-- CONTROLS -->
@@ -1557,30 +1566,36 @@ function renderMes(){
     }
     acum25_full += v25; acum24_full += v24;
     const rowCls = isCurr ? 'row-actual' : (isFuture ? 'row-future' : '');
-    // Crecimiento YoY (solo para meses CERRADOS)
+    // Crecimiento YoY — mostrar SIEMPRE si hay valor 2026, con badge si en curso
     let crecHtml = '<td class="muted">—</td>';
-    if (isClosed && v25 > 0 && v26 > 0) {
+    if (v26 > 0 && v25 > 0) {
       const c = (v26/v25 - 1) * 100;
-      crecHtml = `<td class="${c>=0?'pos':'neg'}">${fmtPct(c)}</td>`;
+      if (isCurr) {
+        crecHtml = `<td class="curso-pct"><span class="curso-pct-val">${fmtPct(c)}</span><div class="curso-tag">parcial</div></td>`;
+      } else {
+        crecHtml = `<td class="${c>=0?'pos':'neg'}">${fmtPct(c)}</td>`;
+      }
     } else if (isCurr) {
-      crecHtml = '<td class="muted">en curso</td>';
+      crecHtml = '<td class="muted">—</td>';
     }
-    // Cumpl Meta (solo para meses CERRADOS)
+    // Cumpl Meta
     let cumplHtml = '<td class="muted">—</td>';
-    if (isClosed && vmeta > 0 && v26 > 0) {
+    if (v26 > 0 && vmeta > 0) {
       const c = (v26/vmeta - 1) * 100;
-      cumplHtml = `<td class="cumpl ${c>=0?'pos':'neg'}">${fmtPct(c)}</td>`;
-    } else if (isCurr) {
-      cumplHtml = '<td class="muted">en curso</td>';
+      if (isCurr) {
+        cumplHtml = `<td class="curso-pct"><span class="curso-pct-val">${fmtPct(c)}</span><div class="curso-tag">parcial</div></td>`;
+      } else {
+        cumplHtml = `<td class="cumpl ${c>=0?'pos':'neg'}">${fmtPct(c)}</td>`;
+      }
     }
-    // Etiqueta y badge en cell 2026
+    // Cell 2026 con badge EN CURSO bien visible
     let v26Cell = '—';
     if (isCurr) {
-      v26Cell = `${fmtQ(v26)} <span class="mes-inline-badge">EN CURSO</span>`;
+      v26Cell = `<div class="curso-cell"><div class="curso-q">${fmtQ(v26)}</div><div class="curso-badge">EN CURSO</div></div>`;
     } else if (v26 > 0) {
       v26Cell = fmtQ(v26);
     }
-    const lblBadge = isCurr ? ' <span class="mes-lbl-badge">◄ en curso</span>' : (i === mesActIdx ? ' ◄' : '');
+    const lblBadge = isCurr ? ' <span class="mes-lbl-badge">◄</span>' : (i === mesActIdx ? ' ◄' : '');
     html += `<tr class="${rowCls}">
       <td>${meses[i]}${lblBadge}</td>
       <td>${v24>0?fmtQ(v24):'—'}</td>
