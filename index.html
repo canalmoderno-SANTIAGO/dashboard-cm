@@ -426,10 +426,16 @@
   .mes-tbl td.cumpl{font-weight:900;font-size:13.5px}
   .mes-tbl td.col-actual{background:#fff7ed !important;font-weight:800;color:#9a3412;border-left:2px solid #fed7aa;border-right:2px solid #fed7aa}
   .mes-tbl tbody tr.row-actual td.col-actual{background:transparent !important;color:#451a03 !important;border-color:transparent}
-  .mes-tbl tfoot td{background:linear-gradient(180deg,#1a1c30 0%,#0a0f24 100%) !important;color:white !important;font-weight:900;font-size:13.5px;padding:15px 12px;border-top:4px solid #e00206;border-bottom:none}
-  .mes-tbl tfoot td:first-child{background:linear-gradient(180deg,#e00206 0%,#7f1d1d 100%) !important;color:white !important;letter-spacing:1.4px;font-size:12.5px;border-right:3px solid #7f1d1d}
-  .mes-tbl tfoot td.pos{color:#86efac !important;text-shadow:0 0 8px rgba(134,239,172,0.3)}
-  .mes-tbl tfoot td.neg{color:#fca5a5 !important;text-shadow:0 0 8px rgba(252,165,165,0.3)}
+  .mes-tbl tfoot td{background:linear-gradient(180deg,#1a2547 0%,#0d1530 100%) !important;color:#ffffff !important;font-weight:800;font-size:15px;padding:18px 14px;border-top:4px solid #e00206;border-bottom:none;text-align:right;vertical-align:middle}
+  .mes-tbl tfoot td:first-child{background:linear-gradient(135deg,#e00206 0%,#a30409 100%) !important;color:white !important;letter-spacing:0.5px;font-size:12px;border-right:3px solid #7f1d1d;text-align:left;padding-left:18px}
+  .mes-tbl tfoot td.col-actual{background:linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%) !important;border-left:3px solid #b45309;border-right:3px solid #b45309}
+  .ytd-lbl{font-size:14px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;line-height:1.1;color:white}
+  .ytd-sub{font-size:10.5px;font-weight:600;color:rgba(255,255,255,0.78);letter-spacing:0.8px;margin-top:3px;text-transform:none}
+  .ytd-q{display:inline-block;font-variant-numeric:tabular-nums;color:white;font-weight:800;font-size:16px;letter-spacing:-0.3px}
+  .ytd-q-actual{color:#0c1530 !important;font-weight:900;font-size:18px;letter-spacing:-0.4px;text-shadow:0 1px 0 rgba(255,255,255,0.4)}
+  .ytd-pct{display:inline-block;font-weight:900;font-size:17px;padding:6px 12px;border-radius:8px;letter-spacing:-0.2px}
+  .ytd-pct.pos{background:rgba(34,197,94,0.18);color:#86efac !important;border:1px solid rgba(34,197,94,0.4)}
+  .ytd-pct.neg{background:rgba(239,68,68,0.18);color:#fca5a5 !important;border:1px solid rgba(239,68,68,0.4)}
   .mes-chart-wrap{height:380px;margin-top:18px;background:white;padding:18px;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 2px 10px rgba(15,23,42,0.05)}
 
   @media(max-width:760px){
@@ -559,7 +565,7 @@
         <div class="header-subtitle">Dashboard Ejecutivo · JUN 2026 · Semana en curso S23</div>
       </div>
     </div>
-    <div class="header-right">Actualizado<strong>03/06/2026 · 12:43</strong></div>
+    <div class="header-right">Actualizado<strong>03/06/2026 · 12:48</strong></div>
   </div>
 
   <!-- CONTROLS -->
@@ -1585,26 +1591,68 @@ function renderMes(){
       ${cumplHtml}
     </tr>`;
   }
-  // Footer total YTD = parallel period (apples to apples)
-  const crecAcum = acum25_par > 0 ? ((acum26_par/acum25_par - 1) * 100) : 0;
-  const cumplAcum = acumMeta_par > 0 ? ((acum26_par/acumMeta_par - 1) * 100) : 0;
-  // Numero de meses cerrados para etiqueta
-  let nClosed = 0;
-  for (let i = 0; i < 12; i++) {
-    const v26 = cd['2026'][i] || 0;
-    const v25 = cd['2025'][i] || 0;
-    if (v26 > 0 && !isInProgress(i, v26, v25)) nClosed++;
+  // YTD a nivel SEMANAL (mas granular y comparativo real):
+  // Usa acum_2026[lastClosedWeek] vs acum_2025[lastClosedWeek] desde comparativo
+  let weeklyYTD = null;
+  const compData = DATA.comparativo[mesCanal];
+  if (compData && compData.semanas && compData.semanas.length > 0) {
+    // Ultima semana CERRADA = semana_actual - 1 (la actual aun esta en curso)
+    const semActualISO = DATA.semana_actual;
+    let lastClosedW = semActualISO - 1;
+    if (lastClosedW < 1) lastClosedW = 1;
+    // Buscar el indice de esa semana en el array de comparativo
+    let idxW = compData.semanas.indexOf(lastClosedW);
+    // Si no esta, usar el ultimo idx con datos 2026 > 0
+    if (idxW < 0) {
+      for (let i = compData.semanas.length - 1; i >= 0; i--) {
+        if ((compData['2026'][i] || 0) > 0) { idxW = i; lastClosedW = compData.semanas[i]; break; }
+      }
+    }
+    if (idxW >= 0) {
+      const a26_w = compData.acum_2026[idxW] || 0;
+      const a25_w = compData.acum_2025[idxW] || 0;
+      // Meta proporcional: sum de metas cerradas + fraccion del mes actual
+      // Fraccion del mes = dias_mes_t / dias_mes_h
+      const fracMes = (DATA.avance.dias_mes_h > 0) ? (DATA.avance.dias_mes_t / DATA.avance.dias_mes_h) : 0;
+      // Meta cerrada = meses cerrados completos + fraccion mes actual
+      let metaW = 0;
+      for (let i = 0; i < 12; i++) {
+        if (i < mesActIdx) metaW += cd.meta_2026[i] || 0;
+        else if (i === mesActIdx) metaW += (cd.meta_2026[i] || 0) * fracMes;
+      }
+      const crecW = a25_w > 0 ? ((a26_w/a25_w - 1) * 100) : 0;
+      const cumplW = metaW > 0 ? ((a26_w/metaW - 1) * 100) : 0;
+      weeklyYTD = {sem: lastClosedW, a26: a26_w, a25: a25_w, meta: metaW, crec: crecW, cumpl: cumplW, fracMes: fracMes};
+    }
   }
-  const periodLbl = nClosed > 0 ? `YTD · ${meses.slice(0,nClosed).join(' + ')}` : 'YTD';
-  html += `</tbody><tfoot><tr>
-    <td>${periodLbl}</td>
-    <td>${fmtQ(acum24_par)}</td>
-    <td>${fmtQ(acum25_par)}</td>
-    <td class="col-actual">${fmtQ(acum26_par)}</td>
-    <td>${fmtQ(acumMeta_par)}</td>
-    <td class="${crecAcum>=0?'pos':'neg'}">${fmtPct(crecAcum)}</td>
-    <td class="${cumplAcum>=0?'pos':'neg'}">${fmtPct(cumplAcum)}</td>
-  </tr></tfoot>`;
+
+  // Footer principal: YTD semanal (mas real)
+  let footerHtml = '';
+  if (weeklyYTD) {
+    footerHtml = `<tr class="ytd-main">
+      <td><div class="ytd-lbl">YTD 2026</div><div class="ytd-sub">al cierre de S${weeklyYTD.sem}</div></td>
+      <td><span class="ytd-q">${fmtQ(acum24_full)}</span></td>
+      <td><span class="ytd-q">${fmtQ(weeklyYTD.a25)}</span></td>
+      <td class="col-actual"><span class="ytd-q ytd-q-actual">${fmtQ(weeklyYTD.a26)}</span></td>
+      <td><span class="ytd-q">${fmtQ(weeklyYTD.meta)}</span></td>
+      <td><span class="ytd-pct ${weeklyYTD.crec>=0?'pos':'neg'}">${fmtPct(weeklyYTD.crec)}</span></td>
+      <td><span class="ytd-pct ${weeklyYTD.cumpl>=0?'pos':'neg'}">${fmtPct(weeklyYTD.cumpl)}</span></td>
+    </tr>`;
+  } else {
+    // Fallback: parallel period mensual
+    const crecAcum = acum25_par > 0 ? ((acum26_par/acum25_par - 1) * 100) : 0;
+    const cumplAcum = acumMeta_par > 0 ? ((acum26_par/acumMeta_par - 1) * 100) : 0;
+    footerHtml = `<tr class="ytd-main">
+      <td><div class="ytd-lbl">YTD 2026</div><div class="ytd-sub">meses cerrados</div></td>
+      <td><span class="ytd-q">${fmtQ(acum24_par)}</span></td>
+      <td><span class="ytd-q">${fmtQ(acum25_par)}</span></td>
+      <td class="col-actual"><span class="ytd-q ytd-q-actual">${fmtQ(acum26_par)}</span></td>
+      <td><span class="ytd-q">${fmtQ(acumMeta_par)}</span></td>
+      <td><span class="ytd-pct ${crecAcum>=0?'pos':'neg'}">${fmtPct(crecAcum)}</span></td>
+      <td><span class="ytd-pct ${cumplAcum>=0?'pos':'neg'}">${fmtPct(cumplAcum)}</span></td>
+    </tr>`;
+  }
+  html += `</tbody><tfoot>${footerHtml}</tfoot>`;
   document.getElementById('tbl-mes').innerHTML = html;
 
   // Chart: barras agrupadas 2025 / 2026 / Meta por mes
