@@ -415,17 +415,34 @@
   .mes-tbl tbody td:first-child{text-align:left;padding-left:18px;font-weight:900;text-transform:uppercase;letter-spacing:0.6px;font-size:12px;background:#f8fafc;color:#1a1c30;border-right:3px solid #cbd5e1;width:104px}
   .mes-tbl tbody tr.row-actual td{background:linear-gradient(90deg,#fef9c3,#fef08a) !important;border-top:2px solid #ca8a04;border-bottom:2px solid #ca8a04;font-weight:800}
   .mes-tbl tbody tr.row-actual td:first-child{background:linear-gradient(90deg,#fbbf24,#f59e0b) !important;color:#451a03;border-right:3px solid #b45309;letter-spacing:0.8px}
+  /* Filtro chips + shortcuts */
+  .mes-filter-bar{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 3px rgba(15,23,42,0.04)}
+  .mes-filter-lbl{font-size:11px;font-weight:800;color:#475569;letter-spacing:1.2px;text-transform:uppercase;margin-right:10px;display:inline-block}
+  .mes-filter-shortcuts{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-bottom:10px;border-bottom:1px dashed #e2e8f0}
+  .mes-shortcut{padding:5px 12px;background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:0.3px;cursor:pointer;transition:all 0.14s ease;font-family:inherit;text-transform:uppercase}
+  .mes-shortcut:hover{background:#2b2f51;color:white;border-color:#2b2f51}
+  .mes-shortcut.active{background:linear-gradient(135deg,#e00206,#a30409);color:white;border-color:#7f1d1d;box-shadow:0 2px 6px rgba(224,2,6,0.25)}
+  .mes-filter-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .mes-chips{display:flex;flex-wrap:wrap;gap:5px}
+  .mes-chip{padding:6px 12px;background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:18px;font-size:11px;font-weight:800;letter-spacing:0.6px;color:#64748b;cursor:pointer;transition:all 0.14s ease;font-family:inherit;display:inline-flex;align-items:center;gap:4px}
+  .mes-chip.active{background:linear-gradient(135deg,#2b2f51,#1a1c30);color:white;border-color:#1a1c30;box-shadow:0 2px 6px rgba(43,47,81,0.2)}
+  .mes-chip.actual{border:2px solid #f59e0b;background:#fef3c7;color:#92400e}
+  .mes-chip.actual.active{background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border-color:#b45309}
+  .mes-chip:hover:not(.active){background:#e2e8f0;border-color:#94a3b8}
+  .mes-chip-dot{width:6px;height:6px;border-radius:50%;background:#cbd5e1}
+  .mes-chip.active .mes-chip-dot{background:#86efac}
   .mes-inline-badge{display:inline-block;background:#ca8a04;color:white;font-size:9.5px;font-weight:900;letter-spacing:1px;padding:2px 7px;border-radius:4px;vertical-align:middle;margin-left:6px;text-transform:uppercase}
   .mes-lbl-badge{display:inline-block;background:rgba(255,255,255,0.85);color:#451a03;font-size:11px;font-weight:900;letter-spacing:0.8px;padding:2px 7px;border-radius:4px;margin-left:6px}
   /* Celda 2026 cuando esta en curso */
-  .curso-cell{display:flex;flex-direction:column;align-items:flex-end;gap:4px;line-height:1}
-  .curso-q{font-size:14px;font-weight:900;color:#451a03;letter-spacing:-0.3px;font-variant-numeric:tabular-nums}
-  .curso-badge{display:inline-block;background:#ca8a04;color:white;font-size:9.5px;font-weight:900;letter-spacing:1.2px;padding:3px 8px;border-radius:4px;text-transform:uppercase;box-shadow:0 1px 3px rgba(202,138,4,0.3)}
-  /* Celdas % cuando estan en curso - mostrar % con tag parcial */
-  .mes-tbl td.curso-pct{background:linear-gradient(180deg,#fef3c7 0%,#fde68a 100%) !important;font-weight:900;text-align:right;padding:8px 14px !important;vertical-align:middle}
-  .mes-tbl tbody tr.row-actual td.curso-pct{background:transparent !important}
-  .curso-pct-val{display:block;font-size:15px;font-weight:900;color:#7c2d12;letter-spacing:-0.3px;line-height:1.1}
-  .curso-tag{display:inline-block;background:rgba(202,138,4,0.85);color:white;font-size:9px;font-weight:800;letter-spacing:1px;padding:1px 6px;border-radius:3px;text-transform:uppercase;margin-top:3px}
+  .curso-cell{display:flex;flex-direction:column;align-items:flex-end;gap:5px;line-height:1}
+  .curso-q{font-size:15px;font-weight:900;color:#451a03;letter-spacing:-0.3px;font-variant-numeric:tabular-nums}
+  .curso-badge{display:inline-block;background:linear-gradient(135deg,#ca8a04,#a16207);color:white;font-size:9.5px;font-weight:900;letter-spacing:1px;padding:4px 9px;border-radius:5px;text-transform:uppercase;box-shadow:0 2px 5px rgba(202,138,4,0.35)}
+  /* Celdas % cuando estan en curso - mostrar % real pro-rata */
+  .mes-tbl td.curso-pct{background:transparent !important;padding:8px 14px !important;vertical-align:middle;text-align:right}
+  .curso-pct-val{display:block;font-size:17px;font-weight:900;letter-spacing:-0.5px;line-height:1.1}
+  .mes-tbl td.curso-pct.pos .curso-pct-val{color:#14532d}
+  .mes-tbl td.curso-pct.neg .curso-pct-val{color:#7f1d1d}
+  .curso-pct-info{display:inline-block;background:rgba(202,138,4,0.18);color:#78350f;font-size:9px;font-weight:800;letter-spacing:0.4px;padding:2px 7px;border-radius:4px;margin-top:4px;border:1px solid rgba(202,138,4,0.35)}
   .mes-tbl tbody tr.row-future td{color:#cbd5e1;font-style:italic;background:#fafbfc;font-weight:500}
   .mes-tbl tbody tr.row-future td:first-child{color:#94a3b8;background:#f1f5f9}
   .mes-tbl tbody tr:last-child td{border-bottom:none}
@@ -445,6 +462,7 @@
   .ytd-pct{display:inline-block;font-weight:900;font-size:17px;padding:6px 12px;border-radius:8px;letter-spacing:-0.2px}
   .ytd-pct.pos{background:rgba(34,197,94,0.18);color:#86efac !important;border:1px solid rgba(34,197,94,0.4)}
   .ytd-pct.neg{background:rgba(239,68,68,0.18);color:#fca5a5 !important;border:1px solid rgba(239,68,68,0.4)}
+  .ytd-prorata-tag{display:inline-block;background:rgba(251,191,36,0.25);color:#fde68a;font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;margin-left:6px;letter-spacing:0.5px;text-transform:uppercase;border:1px solid rgba(251,191,36,0.4)}
   .mes-chart-wrap{height:380px;margin-top:18px;background:white;padding:18px;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 2px 10px rgba(15,23,42,0.05)}
 
   @media(max-width:760px){
@@ -574,7 +592,7 @@
         <div class="header-subtitle">Dashboard Ejecutivo · JUN 2026 · Semana en curso S23</div>
       </div>
     </div>
-    <div class="header-right">Actualizado<strong>03/06/2026 · 12:53</strong></div>
+    <div class="header-right">Actualizado<strong>03/06/2026 · 14:38</strong></div>
   </div>
 
   <!-- CONTROLS -->
@@ -629,6 +647,21 @@
       <button class="mes-tab" data-mcanal="SUPERMERCADOS">🛒 Supermercados</button>
       <button class="mes-tab" data-mcanal="GUBERNAMENTALES">🏛️ Gubernamentales</button>
       <button class="mes-tab" data-mcanal="INSTITUCIONES">🏢 Instituciones</button>
+    </div>
+    <div class="mes-filter-bar">
+      <div class="mes-filter-shortcuts">
+        <span class="mes-filter-lbl">📌 Atajos YTD:</span>
+        <button class="mes-shortcut" data-shortcut="closed">Solo cerrados</button>
+        <button class="mes-shortcut" data-shortcut="all">Año completo</button>
+        <button class="mes-shortcut" data-shortcut="q1">Q1 (ENE-MAR)</button>
+        <button class="mes-shortcut" data-shortcut="q2">Q2 (ABR-JUN)</button>
+        <button class="mes-shortcut" data-shortcut="h1">Semestre 1</button>
+        <button class="mes-shortcut" data-shortcut="h2">Semestre 2</button>
+      </div>
+      <div class="mes-filter-chips">
+        <span class="mes-filter-lbl">📅 Meses incluidos:</span>
+        <div class="mes-chips" id="mes-chips"></div>
+      </div>
     </div>
     <div class="mes-kpi-row" id="mes-kpi-row"></div>
     <div class="tbl-wrap"><table class="mes-tbl" id="tbl-mes"></table></div>
@@ -1527,14 +1560,18 @@ function renderMes(){
   document.getElementById('mes-kpi-row').innerHTML = kpiHtml;
 
   // Detectar mes en curso vs cerrados
-  // - Cerrado: mes con valor 2026 > 0 Y dia 1 del mes siguiente paso (i < lastClosedIdx+1)
-  //   simplificacion: cualquier mes con valor < 50% del 2025 mismo mes Y es el mes actual = en curso
   const isInProgress = (i, v26, v25) => {
     if (i !== mesActIdx) return false;
     if (v26 <= 0) return false;
-    if (v25 > 0 && v26 < v25 * 0.4) return true;  // <40% del año pasado = en curso
-    return false;  // si ya iguala/supera el año pasado, considerarlo cerrado
+    if (v25 > 0 && v26 < v25 * 0.4) return true;
+    return false;
   };
+  // Fraccion del mes transcurrida (para pro-rata)
+  const fracMes = (DATA.avance && DATA.avance.dias_mes_h > 0)
+    ? (DATA.avance.dias_mes_t / DATA.avance.dias_mes_h) : 0;
+  // Estado de filtros de meses (state externo)
+  if (!window._mesFilter) window._mesFilter = {active: new Set([0,1,2,3,4,5,6,7,8,9,10,11])};
+  const mesActive = window._mesFilter.active;
 
   // Tabla mensual: filas = meses, columnas = 2024 | 2025 | 2026 | Meta | Crec % YoY | Cumpl %
   let html = `
@@ -1566,32 +1603,49 @@ function renderMes(){
     }
     acum25_full += v25; acum24_full += v24;
     const rowCls = isCurr ? 'row-actual' : (isFuture ? 'row-future' : '');
-    // Crecimiento YoY — mostrar SIEMPRE si hay valor 2026, con badge si en curso
+    // Crecimiento YoY — para meses cerrados: comparacion completa
+    //                  para mes en curso:    comparacion PRO-RATA (vs 2025 × fracMes)
     let crecHtml = '<td class="muted">—</td>';
     if (v26 > 0 && v25 > 0) {
-      const c = (v26/v25 - 1) * 100;
-      if (isCurr) {
-        crecHtml = `<td class="curso-pct"><span class="curso-pct-val">${fmtPct(c)}</span><div class="curso-tag">parcial</div></td>`;
+      if (isCurr && fracMes > 0) {
+        const v25_pr = v25 * fracMes;
+        const c = (v26/v25_pr - 1) * 100;
+        const sign = c >= 0 ? '+' : '';
+        const cls = c >= 0 ? 'pos' : 'neg';
+        crecHtml = `<td class="curso-pct ${cls}">
+          <div class="curso-pct-val">${sign}${c.toFixed(1)}%</div>
+          <div class="curso-pct-info">vs Q${Math.round(v25_pr).toLocaleString('en-US')} pro-rata</div>
+        </td>`;
       } else {
+        const c = (v26/v25 - 1) * 100;
         crecHtml = `<td class="${c>=0?'pos':'neg'}">${fmtPct(c)}</td>`;
       }
-    } else if (isCurr) {
-      crecHtml = '<td class="muted">—</td>';
     }
-    // Cumpl Meta
+    // Cumpl Meta — misma logica pro-rata para en curso
     let cumplHtml = '<td class="muted">—</td>';
     if (v26 > 0 && vmeta > 0) {
-      const c = (v26/vmeta - 1) * 100;
-      if (isCurr) {
-        cumplHtml = `<td class="curso-pct"><span class="curso-pct-val">${fmtPct(c)}</span><div class="curso-tag">parcial</div></td>`;
+      if (isCurr && fracMes > 0) {
+        const vmeta_pr = vmeta * fracMes;
+        const c = (v26/vmeta_pr - 1) * 100;
+        const sign = c >= 0 ? '+' : '';
+        const cls = c >= 0 ? 'pos' : 'neg';
+        cumplHtml = `<td class="curso-pct ${cls}">
+          <div class="curso-pct-val">${sign}${c.toFixed(1)}%</div>
+          <div class="curso-pct-info">vs Q${Math.round(vmeta_pr).toLocaleString('en-US')} pro-rata</div>
+        </td>`;
       } else {
+        const c = (v26/vmeta - 1) * 100;
         cumplHtml = `<td class="cumpl ${c>=0?'pos':'neg'}">${fmtPct(c)}</td>`;
       }
     }
-    // Cell 2026 con badge EN CURSO bien visible
+    // Cell 2026 con badge EN CURSO + indicador de progreso del mes
     let v26Cell = '—';
     if (isCurr) {
-      v26Cell = `<div class="curso-cell"><div class="curso-q">${fmtQ(v26)}</div><div class="curso-badge">EN CURSO</div></div>`;
+      const pctMes = (fracMes * 100).toFixed(0);
+      v26Cell = `<div class="curso-cell">
+        <div class="curso-q">${fmtQ(v26)}</div>
+        <div class="curso-badge">EN CURSO · ${pctMes}% del mes</div>
+      </div>`;
     } else if (v26 > 0) {
       v26Cell = fmtQ(v26);
     }
@@ -1606,67 +1660,72 @@ function renderMes(){
       ${cumplHtml}
     </tr>`;
   }
-  // YTD a nivel SEMANAL (mas granular y comparativo real):
-  // Usa acum_2026[lastClosedWeek] vs acum_2025[lastClosedWeek] desde comparativo
-  let weeklyYTD = null;
-  const compData = DATA.comparativo[mesCanal];
-  if (compData && compData.semanas && compData.semanas.length > 0) {
-    // Ultima semana CERRADA = semana_actual - 1 (la actual aun esta en curso)
-    const semActualISO = DATA.semana_actual;
-    let lastClosedW = semActualISO - 1;
-    if (lastClosedW < 1) lastClosedW = 1;
-    // Buscar el indice de esa semana en el array de comparativo
-    let idxW = compData.semanas.indexOf(lastClosedW);
-    // Si no esta, usar el ultimo idx con datos 2026 > 0
-    if (idxW < 0) {
-      for (let i = compData.semanas.length - 1; i >= 0; i--) {
-        if ((compData['2026'][i] || 0) > 0) { idxW = i; lastClosedW = compData.semanas[i]; break; }
-      }
-    }
-    if (idxW >= 0) {
-      const a26_w = compData.acum_2026[idxW] || 0;
-      const a25_w = compData.acum_2025[idxW] || 0;
-      // Meta proporcional: sum de metas cerradas + fraccion del mes actual
-      // Fraccion del mes = dias_mes_t / dias_mes_h
-      const fracMes = (DATA.avance.dias_mes_h > 0) ? (DATA.avance.dias_mes_t / DATA.avance.dias_mes_h) : 0;
-      // Meta cerrada = meses cerrados completos + fraccion mes actual
-      let metaW = 0;
-      for (let i = 0; i < 12; i++) {
-        if (i < mesActIdx) metaW += cd.meta_2026[i] || 0;
-        else if (i === mesActIdx) metaW += (cd.meta_2026[i] || 0) * fracMes;
-      }
-      const crecW = a25_w > 0 ? ((a26_w/a25_w - 1) * 100) : 0;
-      const cumplW = metaW > 0 ? ((a26_w/metaW - 1) * 100) : 0;
-      weeklyYTD = {sem: lastClosedW, a26: a26_w, a25: a25_w, meta: metaW, crec: crecW, cumpl: cumplW, fracMes: fracMes};
-    }
+  // Render chips de meses (segun filtro)
+  const chipsEl = document.getElementById('mes-chips');
+  if (chipsEl) {
+    chipsEl.innerHTML = meses.map((mn, i) => {
+      const isAct = mesActive.has(i);
+      const isCurrMonth = (i === mesActIdx);
+      const cls = ['mes-chip'];
+      if (isAct) cls.push('active');
+      if (isCurrMonth) cls.push('actual');
+      return `<button class="${cls.join(' ')}" data-midx="${i}"><span class="mes-chip-dot"></span>${mn}${isCurrMonth?' ◄':''}</button>`;
+    }).join('');
+    chipsEl.querySelectorAll('.mes-chip').forEach(b => {
+      b.onclick = () => {
+        const idx = parseInt(b.dataset.midx);
+        if (mesActive.has(idx)) mesActive.delete(idx); else mesActive.add(idx);
+        // Limpiar shortcut activo (selección custom)
+        document.querySelectorAll('.mes-shortcut').forEach(s => s.classList.remove('active'));
+        renderMes();
+      };
+    });
   }
 
-  // Footer principal: YTD semanal (mas real)
-  let footerHtml = '';
-  if (weeklyYTD) {
-    footerHtml = `<tr class="ytd-main">
-      <td><div class="ytd-lbl">YTD 2026</div><div class="ytd-sub">al cierre de S${weeklyYTD.sem}</div></td>
-      <td><span class="ytd-q">${fmtQ(acum24_full)}</span></td>
-      <td><span class="ytd-q">${fmtQ(weeklyYTD.a25)}</span></td>
-      <td class="col-actual"><span class="ytd-q ytd-q-actual">${fmtQ(weeklyYTD.a26)}</span></td>
-      <td><span class="ytd-q">${fmtQ(weeklyYTD.meta)}</span></td>
-      <td><span class="ytd-pct ${weeklyYTD.crec>=0?'pos':'neg'}">${fmtPct(weeklyYTD.crec)}</span></td>
-      <td><span class="ytd-pct ${weeklyYTD.cumpl>=0?'pos':'neg'}">${fmtPct(weeklyYTD.cumpl)}</span></td>
-    </tr>`;
-  } else {
-    // Fallback: parallel period mensual
-    const crecAcum = acum25_par > 0 ? ((acum26_par/acum25_par - 1) * 100) : 0;
-    const cumplAcum = acumMeta_par > 0 ? ((acum26_par/acumMeta_par - 1) * 100) : 0;
-    footerHtml = `<tr class="ytd-main">
-      <td><div class="ytd-lbl">YTD 2026</div><div class="ytd-sub">meses cerrados</div></td>
-      <td><span class="ytd-q">${fmtQ(acum24_par)}</span></td>
-      <td><span class="ytd-q">${fmtQ(acum25_par)}</span></td>
-      <td class="col-actual"><span class="ytd-q ytd-q-actual">${fmtQ(acum26_par)}</span></td>
-      <td><span class="ytd-q">${fmtQ(acumMeta_par)}</span></td>
-      <td><span class="ytd-pct ${crecAcum>=0?'pos':'neg'}">${fmtPct(crecAcum)}</span></td>
-      <td><span class="ytd-pct ${cumplAcum>=0?'pos':'neg'}">${fmtPct(cumplAcum)}</span></td>
-    </tr>`;
+  // Suma YTD por filtro de meses (chips activos)
+  let f24=0, f25=0, f26=0, fMeta=0;
+  let mesesSelLbl = [];
+  for (let i = 0; i < 12; i++) {
+    if (!mesActive.has(i)) continue;
+    const v24 = cd['2024'][i] || 0;
+    const v25 = cd['2025'][i] || 0;
+    const v26 = cd['2026'][i] || 0;
+    const vmeta = cd.meta_2026[i] || 0;
+    const isCurr = isInProgress(i, v26, v25);
+    f24 += v24;
+    // Para 2025 y Meta: si el mes filtrado es EL EN CURSO, pro-ratear
+    if (isCurr && fracMes > 0) {
+      f25 += v25 * fracMes;
+      fMeta += vmeta * fracMes;
+    } else {
+      f25 += v25;
+      fMeta += vmeta;
+    }
+    f26 += v26;
+    mesesSelLbl.push(meses[i]);
   }
+  const crecF = f25 > 0 ? ((f26/f25 - 1) * 100) : 0;
+  const cumplF = fMeta > 0 ? ((f26/fMeta - 1) * 100) : 0;
+  // Etiqueta legible
+  const nSel = mesesSelLbl.length;
+  let lblSub;
+  if (nSel === 0) lblSub = 'Selecciona meses';
+  else if (nSel === 12) lblSub = 'Año completo';
+  else if (nSel <= 4) lblSub = mesesSelLbl.join(' · ');
+  else lblSub = `${nSel} meses (${mesesSelLbl[0]}–${mesesSelLbl[nSel-1]})`;
+  // Indicar si incluye mes pro-rata
+  const incluyeProRata = mesActive.has(mesActIdx) && isInProgress(mesActIdx, cd['2026'][mesActIdx]||0, cd['2025'][mesActIdx]||0);
+  const proRataTag = incluyeProRata ? ' <span class="ytd-prorata-tag">pro-rata mes en curso</span>' : '';
+
+  const footerHtml = `<tr class="ytd-main">
+    <td><div class="ytd-lbl">YTD Filtrado</div><div class="ytd-sub">${lblSub}${proRataTag}</div></td>
+    <td><span class="ytd-q">${fmtQ(f24)}</span></td>
+    <td><span class="ytd-q">${fmtQ(f25)}</span></td>
+    <td class="col-actual"><span class="ytd-q ytd-q-actual">${fmtQ(f26)}</span></td>
+    <td><span class="ytd-q">${fmtQ(fMeta)}</span></td>
+    <td><span class="ytd-pct ${crecF>=0?'pos':'neg'}">${fmtPct(crecF)}</span></td>
+    <td><span class="ytd-pct ${cumplF>=0?'pos':'neg'}">${fmtPct(cumplF)}</span></td>
+  </tr>`;
   html += `</tbody><tfoot>${footerHtml}</tfoot>`;
   document.getElementById('tbl-mes').innerHTML = html;
 
@@ -1712,6 +1771,32 @@ function setMesCanal(c){
 }
 document.querySelectorAll('#mes-tabs .mes-tab').forEach(b =>
   b.addEventListener('click', () => setMesCanal(b.dataset.mcanal)));
+
+// Shortcuts de filtros de meses
+function applyMesShortcut(sc){
+  if (!window._mesFilter) window._mesFilter = {active: new Set()};
+  const a = window._mesFilter.active;
+  a.clear();
+  const cd = DATA.mensual.canales[mesCanal];
+  if (sc === 'closed') {
+    // Solo meses con valor 2026 > 0 que NO esten en curso
+    for (let i = 0; i < 12; i++) {
+      const v26 = cd['2026'][i] || 0;
+      const v25 = cd['2025'][i] || 0;
+      const isCurr = (i === DATA.mensual.mes_actual - 1) && v26 > 0 && v25 > 0 && v26 < v25 * 0.4;
+      if (v26 > 0 && !isCurr) a.add(i);
+    }
+  } else if (sc === 'all') {
+    for (let i = 0; i < 12; i++) a.add(i);
+  } else if (sc === 'q1') { [0,1,2].forEach(i => a.add(i)); }
+  else if (sc === 'q2') { [3,4,5].forEach(i => a.add(i)); }
+  else if (sc === 'h1') { [0,1,2,3,4,5].forEach(i => a.add(i)); }
+  else if (sc === 'h2') { [6,7,8,9,10,11].forEach(i => a.add(i)); }
+  document.querySelectorAll('.mes-shortcut').forEach(s => s.classList.toggle('active', s.dataset.shortcut === sc));
+  renderMes();
+}
+document.querySelectorAll('.mes-shortcut').forEach(b =>
+  b.addEventListener('click', () => applyMesShortcut(b.dataset.shortcut)));
 
 // === SECCION 4: COMPARATIVO desde PP ===
 function getSemanasRange(){
