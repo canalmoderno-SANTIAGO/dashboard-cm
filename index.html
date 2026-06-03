@@ -415,6 +415,8 @@
   .mes-tbl tbody td:first-child{text-align:left;padding-left:18px;font-weight:900;text-transform:uppercase;letter-spacing:0.6px;font-size:12px;background:#f8fafc;color:#1a1c30;border-right:3px solid #cbd5e1;width:104px}
   .mes-tbl tbody tr.row-actual td{background:linear-gradient(90deg,#fef9c3,#fef08a) !important;border-top:2px solid #ca8a04;border-bottom:2px solid #ca8a04;font-weight:800}
   .mes-tbl tbody tr.row-actual td:first-child{background:linear-gradient(90deg,#fbbf24,#f59e0b) !important;color:#451a03;border-right:3px solid #b45309;letter-spacing:0.8px}
+  .mes-inline-badge{display:inline-block;background:#ca8a04;color:white;font-size:9.5px;font-weight:900;letter-spacing:1px;padding:2px 7px;border-radius:4px;vertical-align:middle;margin-left:6px;text-transform:uppercase}
+  .mes-lbl-badge{display:inline-block;background:rgba(255,255,255,0.85);color:#451a03;font-size:9.5px;font-weight:800;letter-spacing:0.8px;padding:2px 6px;border-radius:4px;margin-left:6px;text-transform:uppercase}
   .mes-tbl tbody tr.row-future td{color:#cbd5e1;font-style:italic;background:#fafbfc;font-weight:500}
   .mes-tbl tbody tr.row-future td:first-child{color:#94a3b8;background:#f1f5f9}
   .mes-tbl tbody tr:last-child td{border-bottom:none}
@@ -557,7 +559,7 @@
         <div class="header-subtitle">Dashboard Ejecutivo · JUN 2026 · Semana en curso S23</div>
       </div>
     </div>
-    <div class="header-right">Actualizado<strong>03/06/2026 · 12:39</strong></div>
+    <div class="header-right">Actualizado<strong>03/06/2026 · 12:43</strong></div>
   </div>
 
   <!-- CONTROLS -->
@@ -1509,6 +1511,16 @@ function renderMes(){
     </div>`;
   document.getElementById('mes-kpi-row').innerHTML = kpiHtml;
 
+  // Detectar mes en curso vs cerrados
+  // - Cerrado: mes con valor 2026 > 0 Y dia 1 del mes siguiente paso (i < lastClosedIdx+1)
+  //   simplificacion: cualquier mes con valor < 50% del 2025 mismo mes Y es el mes actual = en curso
+  const isInProgress = (i, v26, v25) => {
+    if (i !== mesActIdx) return false;
+    if (v26 <= 0) return false;
+    if (v25 > 0 && v26 < v25 * 0.4) return true;  // <40% del año pasado = en curso
+    return false;  // si ya iguala/supera el año pasado, considerarlo cerrado
+  };
+
   // Tabla mensual: filas = meses, columnas = 2024 | 2025 | 2026 | Meta | Crec % YoY | Cumpl %
   let html = `
     <thead><tr>
@@ -1521,49 +1533,75 @@ function renderMes(){
       <th class="col-pct">VS META %</th>
     </tr></thead>
     <tbody>`;
-  let acum25=0, acum26=0, acumMeta=0, acum24=0;
+  // Acumuladores parallel period (solo meses cerrados con valor 2026 >0 y NO en curso)
+  let acum25_par=0, acum26_par=0, acumMeta_par=0, acum24_par=0;
+  // Acumuladores año completo 2024/2025 (para fila adicional opcional)
+  let acum25_full=0, acum24_full=0;
   for (let i = 0; i < 12; i++) {
     const v24 = cd['2024'][i] || 0;
     const v25 = cd['2025'][i] || 0;
     const v26 = cd['2026'][i] || 0;
     const vmeta = cd.meta_2026[i] || 0;
-    acum24 += v24; acum25 += v25; acum26 += v26; acumMeta += vmeta;
-    const isActual = (i === mesActIdx);
-    const isFuture = (i > mesActIdx);
-    const rowCls = isActual ? 'row-actual' : (isFuture ? 'row-future' : '');
-    // Crecimiento YoY (real-1)
+    const isCurr = isInProgress(i, v26, v25);
+    const isFuture = (i > mesActIdx) || (i === mesActIdx && v26 === 0);
+    const isClosed = (v26 > 0 && !isCurr);
+    // Parallel period: solo meses CERRADOS (no en curso, no futuros)
+    if (isClosed) {
+      acum24_par += v24; acum25_par += v25; acum26_par += v26; acumMeta_par += vmeta;
+    }
+    acum25_full += v25; acum24_full += v24;
+    const rowCls = isCurr ? 'row-actual' : (isFuture ? 'row-future' : '');
+    // Crecimiento YoY (solo para meses CERRADOS)
     let crecHtml = '<td class="muted">—</td>';
-    if (v25 > 0 && v26 > 0) {
+    if (isClosed && v25 > 0 && v26 > 0) {
       const c = (v26/v25 - 1) * 100;
       crecHtml = `<td class="${c>=0?'pos':'neg'}">${fmtPct(c)}</td>`;
+    } else if (isCurr) {
+      crecHtml = '<td class="muted">en curso</td>';
     }
-    // Cumpl Meta (cumpl-100)
+    // Cumpl Meta (solo para meses CERRADOS)
     let cumplHtml = '<td class="muted">—</td>';
-    if (vmeta > 0 && v26 > 0) {
+    if (isClosed && vmeta > 0 && v26 > 0) {
       const c = (v26/vmeta - 1) * 100;
       cumplHtml = `<td class="cumpl ${c>=0?'pos':'neg'}">${fmtPct(c)}</td>`;
-    } else if (vmeta > 0 && isFuture) {
-      cumplHtml = '<td class="muted">—</td>';
+    } else if (isCurr) {
+      cumplHtml = '<td class="muted">en curso</td>';
     }
+    // Etiqueta y badge en cell 2026
+    let v26Cell = '—';
+    if (isCurr) {
+      v26Cell = `${fmtQ(v26)} <span class="mes-inline-badge">EN CURSO</span>`;
+    } else if (v26 > 0) {
+      v26Cell = fmtQ(v26);
+    }
+    const lblBadge = isCurr ? ' <span class="mes-lbl-badge">◄ en curso</span>' : (i === mesActIdx ? ' ◄' : '');
     html += `<tr class="${rowCls}">
-      <td>${meses[i]} ${isActual?'◄':''}</td>
+      <td>${meses[i]}${lblBadge}</td>
       <td>${v24>0?fmtQ(v24):'—'}</td>
       <td>${v25>0?fmtQ(v25):'—'}</td>
-      <td class="col-actual">${v26>0?fmtQ(v26):'—'}</td>
+      <td class="col-actual">${v26Cell}</td>
       <td>${vmeta>0?fmtQ(vmeta):'—'}</td>
       ${crecHtml}
       ${cumplHtml}
     </tr>`;
   }
-  // Footer total
-  const crecAcum = acum25 > 0 ? ((acum26/acum25 - 1) * 100) : 0;
-  const cumplAcum = acumMeta > 0 ? ((acum26/acumMeta - 1) * 100) : 0;
+  // Footer total YTD = parallel period (apples to apples)
+  const crecAcum = acum25_par > 0 ? ((acum26_par/acum25_par - 1) * 100) : 0;
+  const cumplAcum = acumMeta_par > 0 ? ((acum26_par/acumMeta_par - 1) * 100) : 0;
+  // Numero de meses cerrados para etiqueta
+  let nClosed = 0;
+  for (let i = 0; i < 12; i++) {
+    const v26 = cd['2026'][i] || 0;
+    const v25 = cd['2025'][i] || 0;
+    if (v26 > 0 && !isInProgress(i, v26, v25)) nClosed++;
+  }
+  const periodLbl = nClosed > 0 ? `YTD · ${meses.slice(0,nClosed).join(' + ')}` : 'YTD';
   html += `</tbody><tfoot><tr>
-    <td>TOTAL YTD</td>
-    <td>${fmtQ(acum24)}</td>
-    <td>${fmtQ(acum25)}</td>
-    <td class="col-actual">${fmtQ(acum26)}</td>
-    <td>${fmtQ(acumMeta)}</td>
+    <td>${periodLbl}</td>
+    <td>${fmtQ(acum24_par)}</td>
+    <td>${fmtQ(acum25_par)}</td>
+    <td class="col-actual">${fmtQ(acum26_par)}</td>
+    <td>${fmtQ(acumMeta_par)}</td>
     <td class="${crecAcum>=0?'pos':'neg'}">${fmtPct(crecAcum)}</td>
     <td class="${cumplAcum>=0?'pos':'neg'}">${fmtPct(cumplAcum)}</td>
   </tr></tfoot>`;
